@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import ReactDOM from 'react-dom'
 import MaterialTable from 'material-table'
 
 import { forwardRef } from 'react';
