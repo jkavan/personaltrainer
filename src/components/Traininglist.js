@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import MaterialTable from 'material-table'
-
+import Moment from 'moment';
 import { forwardRef } from 'react';
 
 import AddBox from '@material-ui/icons/AddBox';
@@ -53,11 +53,13 @@ export default function Traininglist() {
   const columns = [
     {
       title: "Date",
-      field: "date"
+      field: "date",
+      type: 'datetime'
     }, 
     {
       title: "Duration",
-      field: "duration"
+      field: "duration",
+      type: 'numeric'
     }, 
     {
       title: "Activity",
