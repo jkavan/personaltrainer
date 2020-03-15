@@ -59,7 +59,8 @@ export default function Traininglist() {
     {
       title: "Duration",
       field: "duration",
-      type: 'numeric'
+      type: 'numeric',
+      render: rowData => <span>{rowData.duration} min</span>
     }, 
     {
       title: "Activity",
