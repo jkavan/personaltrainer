@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import MaterialTable from 'material-table'
-import Moment from 'moment';
 import { forwardRef } from 'react';
 
 import AddBox from '@material-ui/icons/AddBox';
@@ -18,6 +17,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import { Link } from 'react-router-dom';
 
 const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -45,9 +45,9 @@ export default function Traininglist() {
   useEffect(() => fetchData(), [])
 
   const fetchData = () => {
-    fetch('https://customerrest.herokuapp.com/api/trainings')
+    fetch('https://customerrest.herokuapp.com/gettrainings')
     .then(response => response.json())
-    .then(data => setTrainings(data.content))
+    .then(data => setTrainings(data))
   }
 
   const columns = [
@@ -67,7 +67,7 @@ export default function Traininglist() {
     }, 
     {
       title: "Customer",
-      field: "customer"
+      render: rowData => <Link to={`/customers/${rowData.customer.id}`}>{rowData.customer.firstname} {rowData.customer.lastname}</Link>
     }
   ]
 
