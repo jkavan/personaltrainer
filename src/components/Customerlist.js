@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import MaterialTable from 'material-table'
+import AddCustomer from './AddCustomer.js'
 
 import { forwardRef } from 'react';
 
@@ -50,6 +51,18 @@ export default function Customerlist() {
     .then(data => setCustomers(data.content))
   }
 
+  const saveCustomer = (customer) => {
+    fetch('https://customerrest.herokuapp.com/api/customers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(customer)
+    })
+    .then(response => fetchData())
+    .catch(err => console.error(err));
+  }
+
   const columns = [
     {
       title: "First name",
@@ -82,12 +95,14 @@ export default function Customerlist() {
   ]
 
   return (
-    <MaterialTable
-      columns={columns}
-      data={customers}
-      icons={tableIcons}
-      title="Customers"
-    />
-
+    <div>
+      <AddCustomer saveCustomer={saveCustomer} />
+      <MaterialTable
+        columns={columns}
+        data={customers}
+        icons={tableIcons}
+        title="Customers"
+      />
+    </div>
   )
 }
