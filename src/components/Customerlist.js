@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import MaterialTable from 'material-table'
 import AddCustomer from './AddCustomer.js'
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import { forwardRef } from 'react';
 
@@ -41,14 +45,16 @@ const tableIcons = {
   };
 
 export default function Customerlist() {
-  const [customers, setCustomers] = useState([])
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [snackMessage, setSnackMessage] = useState('');
+  const [customers, setCustomers] = useState([]);
 
-  useEffect(() => fetchData(), [])
+  useEffect(() => fetchData(), []);
 
   const fetchData = () => {
     fetch('https://customerrest.herokuapp.com/api/customers')
     .then(response => response.json())
-    .then(data => setCustomers(data.content))
+    .then(data => setCustomers(data.content));
   }
 
   const saveCustomer = (customer) => {
@@ -61,9 +67,33 @@ export default function Customerlist() {
     })
     .then(response => fetchData())
     .catch(err => console.error(err));
+    setSnackOpen(true);
+    setSnackMessage('New customer added');
+  }
+
+  const deleteCustomer = (link) => {
+    if (window.confirm('Are you sure you wish to delete the customer?')) {
+      fetch(link, {
+        method: 'DELETE',
+      })
+      .then(response => fetchData())
+      .catch(err => console.error(err));
+      setSnackOpen(true);
+      setSnackMessage('Customer has been deleted.');
+    }
   }
 
   const columns = [
+    {
+      title: "Actions",
+      render: rowData =>
+        <ButtonGroup
+          size="small"
+          color="primary"
+        >
+          <IconButton onClick={() => deleteCustomer(rowData.links[0].href)} color="secondary"><DeleteIcon /></IconButton>
+        </ButtonGroup>
+    },
     {
       title: "First name",
       field: "firstname"
@@ -102,6 +132,12 @@ export default function Customerlist() {
         data={customers}
         icons={tableIcons}
         title="Customers"
+      />
+      <Snackbar
+        open={snackOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackOpen(false)}
+        message={<span id="message-id">{snackMessage}</span>}
       />
     </div>
   )
