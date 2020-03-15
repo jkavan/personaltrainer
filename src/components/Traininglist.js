@@ -68,6 +68,7 @@ export default function Traininglist() {
     }, 
     {
       title: "Customer",
+      field: 'customer.firstname',
       render: rowData => <Link to={`/customers/${rowData.customer.id}`}>{rowData.customer.firstname} {rowData.customer.lastname}</Link>
     }
   ]
