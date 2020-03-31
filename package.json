@@ -9,9 +9,11 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "material-table": "^1.57.2",
+    "moment": "^2.24.0",
     "react": "^16.13.1",
     "react-big-calendar": "^0.24.1",
     "react-dom": "^16.13.1",
+    "react-moment": "^0.9.7",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0"
   },
