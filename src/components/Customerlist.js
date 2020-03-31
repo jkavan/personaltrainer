@@ -2,6 +2,7 @@ import React, { useState, useEffect, forwardRef } from "react";
 import MaterialTable from "material-table";
 import AddCustomer from "./AddCustomer.js";
 import EditCustomer from "./EditCustomer.js";
+import AddTraining from "./AddTraining.js";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -99,6 +100,20 @@ export default function Customerlist() {
     }
   };
 
+  const saveTraining = (training) => {
+    fetch("https://customerrest.herokuapp.com/api/trainings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(training),
+    })
+      .then((response) => fetchData())
+      .catch((err) => console.error(err));
+    setSnackOpen(true);
+    setSnackMessage("New training has been added.");
+  };
+
   const columns = [
     {
       title: "Actions",
@@ -111,6 +126,7 @@ export default function Customerlist() {
           >
             <DeleteIcon />
           </IconButton>
+          <AddTraining saveTraining={saveTraining} customer={rowData} />
         </ButtonGroup>
       ),
     },
