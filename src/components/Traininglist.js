@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
 import { forwardRef } from "react";
 
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
 import AddBox from "@material-ui/icons/AddBox";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
 import Check from "@material-ui/icons/Check";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
 import Clear from "@material-ui/icons/Clear";
+import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import Edit from "@material-ui/icons/Edit";
 import FilterList from "@material-ui/icons/FilterList";
@@ -44,6 +47,8 @@ const tableIcons = {
 };
 
 export default function Traininglist() {
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
   const [trainings, setTrainings] = useState([]);
 
   useEffect(() => fetchData(), []);
@@ -54,7 +59,32 @@ export default function Traininglist() {
       .then((data) => setTrainings(data));
   };
 
+  const deleteTraining = (id) => {
+    if (window.confirm("Are you sure you wish to delete the training?")) {
+      fetch(`https://customerrest.herokuapp.com/api/trainings/${id}`, {
+        method: "DELETE",
+      })
+        .then((response) => fetchData())
+        .catch((err) => console.error(err));
+      setSnackOpen(true);
+      setSnackMessage("Training has been deleted.");
+    }
+  };
+
   const columns = [
+    {
+      title: "Actions",
+      render: (rowData) => (
+        <IconButton
+          onClick={() => deleteTraining(rowData.id)}
+          color="secondary"
+          size="small"
+        >
+          <DeleteIcon />
+        </IconButton>
+      ),
+      width: 10
+    },
     {
       title: "Date",
       field: "date",
@@ -82,11 +112,19 @@ export default function Traininglist() {
   ];
 
   return (
-    <MaterialTable
-      columns={columns}
-      data={trainings}
-      icons={tableIcons}
-      title="Trainings"
-    />
+    <div>
+      <MaterialTable
+        columns={columns}
+        data={trainings}
+        icons={tableIcons}
+        title="Trainings"
+      />
+      <Snackbar
+        open={snackOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackOpen(false)}
+        message={<span id="message-id">{snackMessage}</span>}
+      />
+    </div>
   );
 }
