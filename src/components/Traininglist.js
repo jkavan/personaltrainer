@@ -83,7 +83,7 @@ export default function Traininglist() {
           <DeleteIcon />
         </IconButton>
       ),
-      width: 10
+      width: 10,
     },
     {
       title: "Date",
